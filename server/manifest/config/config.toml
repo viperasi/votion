@@ -1,0 +1,19 @@
+[server]
+  address = ":8000"
+  dumpRouterMap = true
+  routeOverWrite = true
+  accessLogEnabled = true
+  openapiPath = "/api.json"
+  
+  [mongodb]
+  link = "mongodb://votion:123456@127.0.0.1:27017"
+  database = "votion"
+  timeout = 10
+  
+  [logger]
+  level = "all"
+  stdout = true
+  
+  [jwt]
+  realm = "votion.gitee.com"
+  key = "votion"
