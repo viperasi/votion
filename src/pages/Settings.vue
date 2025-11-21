@@ -7,10 +7,6 @@
         <label>目录路径</label>
         <input class="input" v-model="notesDir" />
         <div class="actions">
-          <button class="btn" @click="applyWatch">
-            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-            开始监听
-          </button>
           <button class="btn" @click="pickDir">
             <svg viewBox="0 0 24 24"><path d="M4 7h6l2 2h8v10H4z"/></svg>
             选择目录
@@ -74,27 +70,6 @@
       </div>
     </div>
 
-    <div class="panel">
-      <div class="panel-header">测试</div>
-      <div class="inline">
-        <label>测试嵌入文本</label>
-        <input class="input" v-model="testText" placeholder="输入一句话" />
-        <button class="btn" @click="doTestEmbed">
-          <svg viewBox="0 0 24 24"><path d="M12 3v7l6 3-6 3v5"/></svg>
-          测试嵌入
-        </button>
-        <span v-if="embedDim!==null">维度: {{ embedDim }}</span>
-      </div>
-      <div class="inline">
-        <label>测试问答问题</label>
-        <input class="input" v-model="testQuestion" placeholder="输入问题" />
-        <button class="btn" @click="doTestGenerate">
-          <svg viewBox="0 0 24 24"><path d="M5 12h10M9 8l4 4-4 4"/></svg>
-          测试问答
-        </button>
-      </div>
-      <pre v-if="testAnswer">{{ testAnswer }}</pre>
-    </div>
 
     <div class="panel">
       <div class="panel-header">知识库配置</div>
@@ -170,10 +145,7 @@ const searchTopK = ref<number>(5)
 const minSim = ref<number>(0.0)
 const mcpEndpoints = ref('')
 const userPromptTemplate = ref('请基于以下参考内容回答问题。\n\n问题:\n{query}\n\n参考:\n{context}')
-const testText = ref('')
-const embedDim = ref<number|null>(null)
-const testQuestion = ref('')
-const testAnswer = ref('')
+ 
 
 async function applyWatch() {
   await invoke('watch_notes', { dir: notesDir.value })
@@ -231,15 +203,7 @@ async function saveAi() {
   await invoke('update_settings', { kv })
 }
 
-async function doTestEmbed() {
-  const r = await invoke<any>('test_embedding', { text: testText.value })
-  embedDim.value = r?.dim ?? 0
-}
-
-async function doTestGenerate() {
-  const r = await invoke<any>('test_generate', { query: testQuestion.value })
-  testAnswer.value = r?.answer ?? ''
-}
+ 
 
 async function saveKb() {
   const kv: Record<string,string> = {

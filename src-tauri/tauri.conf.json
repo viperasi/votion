@@ -8,6 +8,12 @@
     "devPath": "http://localhost:5173"
   },
   "tauri": {
+    "allowlist": {
+      "all": false,
+      "dialog": { "open": true, "save": true },
+      "shell": { "open": true },
+      "clipboard": { "writeText": true }
+    },
     "bundle": {
       "active": false,
       "targets": "all",
