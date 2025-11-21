@@ -58,4 +58,4 @@ npm run build
 欢迎 Issue 与 PR；建议在 `develop` 分支上提交改动。
 
 ## License / 许可
-MIT
+MulanPSL-2.0
