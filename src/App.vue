@@ -27,5 +27,5 @@
 .side-nav{display:flex;flex-direction:column;gap:10px}
 .side-link{display:flex;align-items:center;justify-content:center}
 .side-link.router-link-active{transform:translateY(-1px);box-shadow:0 6px 16px rgba(123,97,255,.25);background:var(--btn-hover)}
-.main{overflow:auto}
+.main{overflow:auto;min-width:0}
 </style>

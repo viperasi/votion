@@ -1,76 +1,71 @@
 <template>
   <section class="editor grid-bg">
-    <div class="toolbar">
-      <input class="input" v-model="path" placeholder="文件路径" />
-      <button class="btn" @click="openNote" title="打开">
-        <svg viewBox="0 0 24 24"><path d="M4 7h6l2 2h8v10H4z"/></svg>
-      </button>
-      <button class="btn" @click="saveNote" title="保存">
-        <svg viewBox="0 0 24 24"><path d="M5 5h14v10H5zM9 19h6"/></svg>
-      </button>
-      <button class="btn" @click="newNote" title="新建">
-        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-      </button>
-      <button class="btn" @click="deleteNote" title="删除">
-        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
-      <button class="btn" @click="loadNotes" title="刷新列表">
-        <svg viewBox="0 0 24 24"><path d="M12 6a6 6 0 1 1-5.3 3H4l3-3 3 3H8.7A4 4 0 1 0 12 8"/></svg>
-      </button>
-      <button class="btn" @click="renameNote" title="重命名">
-        <svg viewBox="0 0 24 24"><path d="M5 19h14M7 5h10l-6 6-4-4"/></svg>
-      </button>
-      <button class="btn" @click="openInOS" title="在系统中打开">
-        <svg viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-9 9M5 5h6v6H5z"/></svg>
-      </button>
-      <button class="btn" @click="duplicateNote" title="复制为...">
-        <svg viewBox="0 0 24 24"><path d="M9 9h10v10H9zM5 5h10v2H7v10H5z"/></svg>
-      </button>
-      <input class="input" v-model="docTitle" placeholder="文档标题" />
-      <button class="btn" @click="applyTitle" title="应用标题">
-        <svg viewBox="0 0 24 24"><path d="M6 13l4 4 8-8"/></svg>
-      </button>
-      <button class="btn" @click="copyHtml" title="复制HTML">
-        <svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg>
-      </button>
-      <input class="input" v-model="docTags" placeholder="文档标签（逗号分隔）" />
-      <button class="btn" @click="applyTags" title="应用标签">
-        <svg viewBox="0 0 24 24"><path d="M6 7h12v4H6zM6 13h8v4H6z"/></svg>
-      </button>
-      <button class="btn" @click="revealInFinder" title="在Finder中显示">
-        <svg viewBox="0 0 24 24"><path d="M12 5c5 0 9 7 9 7s-4 7-9 7-9-7-9-7 4-7 9-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
-      </button>
-      <button class="btn" @click="exportHtml" title="导出HTML">
-        <svg viewBox="0 0 24 24"><path d="M6 6h12v12H6zM8 10h8M8 14h6"/></svg>
-      </button>
-      <button class="btn" @click="showPreview = !showPreview" :title="showPreview ? '隐藏预览' : '显示预览'">
-        <svg viewBox="0 0 24 24"><path d="M12 5c5 0 9 7 9 7s-4 7-9 7-9-7-9-7 4-7 9-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
-      </button>
-      <span class="dirty" v-if="dirty">未保存</span>
+    <div class="editor-header">
+      <div class="header-left">
+        <button class="btn" @click="newNote" title="新建" data-tip="新建笔记">
+          <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <button class="btn" @click="openNote" title="打开" data-tip="打开文件">
+          <svg viewBox="0 0 24 24"><path d="M4 7h6l2 2h8v10H4z"/></svg>
+        </button>
+        <button class="btn" @click="saveNote" title="保存" data-tip="保存">
+          <svg viewBox="0 0 24 24"><path d="M5 5h14v10H5zM9 19h6"/></svg>
+        </button>
+        <button class="btn" @click="duplicateNote" title="复制" data-tip="复制副本">
+          <svg viewBox="0 0 24 24"><path d="M9 9h10v10H9zM5 5h10v2H7v10H5z"/></svg>
+        </button>
+        <button class="btn" @click="renameNote" title="重命名" data-tip="重命名">
+          <svg viewBox="0 0 24 24"><path d="M5 19h14M7 5h10l-6 6-4-4"/></svg>
+        </button>
+        <button class="btn" @click="deleteNote" title="删除" data-tip="删除">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+        <button class="btn" @click="openInOS" title="打开所在位置" data-tip="打开所在位置">
+          <svg viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-9 9M5 5h6v6H5z"/></svg>
+        </button>
+        <button class="btn" @click="copyHtml" title="复制HTML" data-tip="复制HTML">
+          <svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg>
+        </button>
+        <button class="btn" @click="exportHtml" title="导出HTML" data-tip="导出HTML">
+          <svg viewBox="0 0 24 24"><path d="M6 6h12v12H6zM8 10h8M8 14h6"/></svg>
+        </button>
+        <div class="sort-wrap">
+          <button class="btn" @click="showSort = !showSort" title="排序" data-tip="排序">
+            <svg viewBox="0 0 24 24"><path d="M6 7h12M6 12h8M6 17h4"/></svg>
+          </button>
+          <div v-if="showSort" class="sort-menu card">
+            <button class="btn" @click="setSort('time_desc')">时间倒序</button>
+            <button class="btn" @click="setSort('time_asc')">时间正序</button>
+            <button class="btn" @click="setSort('name_desc')">名称倒序</button>
+            <button class="btn" @click="setSort('name_asc')">名称正序</button>
+          </div>
+        </div>
+        <button class="btn" @click="cycleViewMode" :title="viewMode==='both' ? '仅显示预览' : (viewMode==='preview' ? '仅显示编辑' : '同时显示预览')" data-tip="切换预览">
+          <svg viewBox="0 0 24 24"><path d="M12 5c5 0 9 7 9 7s-4 7-9 7-9-7-9-7 4-7 9-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
+        </button>
+      </div>
+      <div class="header-center">
+        <input class="input title-input" v-model="docTitle" placeholder="文档标题" />
+        <button class="btn" @click="applyTitle" title="应用标题">
+          <svg viewBox="0 0 24 24"><path d="M6 13l4 4 8-8"/></svg>
+        </button>
+      </div>
+      
     </div>
-    <div class="content" :style="{ gridTemplateColumns: showPreview ? '280px 1fr 1fr' : '280px 1fr' }">
+    <div class="content" :style="{ gridTemplateColumns: viewMode==='both' ? (sidebarWidth + 'px 6px 1fr 1fr') : (sidebarWidth + 'px 6px 1fr') }">
       <aside class="sidebar">
-        <h3 class="panel-header">笔记</h3>
-        <input class="input" v-model="noteFilter" placeholder="筛选标题或路径" />
-        <input class="input" v-model="tagFilter" placeholder="按标签筛选" />
-        <select class="input" v-model="sortMode">
-          <option value="path">按路径</option>
-          <option value="updated">按更新时间</option>
-        </select>
         <ul>
-          <li v-for="n in treeList" :key="n.key" :class="n.type" :style="{ paddingLeft: (8 + n.depth * 12) + 'px' }" @click="onTreeClick(n)">
-            <template v-if="n.type === 'dir'">{{ collapsed[n.path] ? '📁' : '📂' }} {{ n.name }}</template>
-            <template v-else>{{ n.name }} <small v-if="n.tags">{{ n.tags }}</small></template>
-          </li>
+          <li v-for="n in treeList" :key="n.key" class="file" @click="openFromList(n.path)">{{ n.name }}</li>
         </ul>
-        <h3 class="panel-header">目录</h3>
-        <input class="input" v-model="findQuery" placeholder="查找当前文档" />
+        
+        
         <ul>
           <li v-for="h in headings" :key="h.id" @click="scrollToHeading(h.id)" :class="['h' + h.level, h.id === activeHeadingId ? 'active' : '']">{{ h.text }}</li>
         </ul>
       </aside>
-      <textarea class="input editor-text" v-model="content" ref="taRef" @scroll="onEditorScroll" />
-      <div v-if="showPreview" class="preview" v-html="safeHighlightedHtml" ref="pvRef" @scroll="onPreviewScroll" @click="onPreviewClick"></div>
+      <div class="resizer" @mousedown="onResizerDown"></div>
+      <textarea v-if="viewMode!=='preview'" class="input editor-text" v-model="content" ref="taRef" />
+      <div v-if="viewMode!=='editor'" class="preview" v-html="safeHtml" ref="pvRef" @click="onPreviewClick"></div>
     </div>
     <div class="status">
       <span class="path">{{ path }}</span>
@@ -109,91 +104,36 @@ const path = ref('')
 const content = ref('')
 const html = computed(() => md.render(content.value))
 const safeHtml = computed(() => DOMPurify.sanitize(html.value))
-const findQuery = ref('')
-function escapeReg(s: string) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') }
-const safeHighlightedHtml = computed(() => {
-  if (!findQuery.value) return safeHtml.value
-  const re = new RegExp(escapeReg(findQuery.value), 'gi')
-  const marked = html.value.replace(re, (m) => `<mark>${m}</mark>`)
-  return DOMPurify.sanitize(marked)
-})
+ 
 const taRef = ref<HTMLTextAreaElement | null>(null)
 const pvRef = ref<HTMLElement | null>(null)
 const notes = ref<Array<{ id: number; path: string; title: string }>>([])
+const notesDir = ref('')
+const sortMode = ref<'time_desc'|'time_asc'|'name_desc'|'name_asc'>('name_asc')
+const showSort = ref(false)
 const route = useRoute()
-const noteFilter = ref('')
-const tagFilter = ref('')
-const sortMode = ref<'path' | 'updated'>('path')
+ 
 const noteMap = computed(() => {
   const m: Record<string, { title: string; tags: string; updated_at: number }> = {}
   for (const n of notes.value as any) { m[n.path] = { title: n.title, tags: (n.tags || ''), updated_at: n.updated_at } }
   return m
 })
-const filteredNotes = computed(() => {
-  const f = noteFilter.value.trim().toLowerCase()
-  const tf = tagFilter.value.trim().toLowerCase()
-  if (!f) return notes.value
-  return notes.value.filter(n => {
-    const base = (n.title || '').toLowerCase().includes(f) || (n.path || '').toLowerCase().includes(f)
-    if (!tf) return base
-    const tags = (noteMap.value[n.path]?.tags || '').toLowerCase()
-    return base && tags.includes(tf)
-  })
-})
-const collapsed = ref<Record<string, boolean>>({})
+const filteredNotes = computed(() => notes.value)
 const treeList = computed(() => {
-  const dirs = new Set<string>()
-  const items: Array<{ key: string; type: 'dir' | 'file'; name: string; path: string; depth: number; tags?: string; updated?: number }> = []
-  const src = filteredNotes.value
-  for (const n of src) {
+  const items = filteredNotes.value.map(n => {
     const parts = (n.path || '').split('/').filter(Boolean)
-    let acc = ''
-    for (let i = 0; i < parts.length - 1; i++) {
-      acc = acc ? acc + '/' + parts[i] : parts[i]
-      if (!dirs.has(acc)) {
-        dirs.add(acc)
-        items.push({ key: 'd:' + acc, type: 'dir', name: parts[i], path: acc, depth: i })
-      }
-    }
     const fileName = parts[parts.length - 1] || n.title || '未命名'
-    const meta = noteMap.value[n.path]
-    items.push({ key: 'f:' + n.path, type: 'file', name: fileName, path: n.path, depth: Math.max(parts.length - 1, 0), tags: meta?.tags, updated: meta?.updated_at })
-  }
-  items.sort((a, b) => {
-    if (sortMode.value === 'updated') {
-      const au = a.updated || 0, bu = b.updated || 0
-      if (a.type === 'dir' && b.type === 'dir') return a.path.localeCompare(b.path)
-      if (a.type === 'dir') return -1
-      if (b.type === 'dir') return 1
-      return bu - au
-    }
-    return a.path.localeCompare(b.path)
+    const updated = noteMap.value[n.path]?.updated_at || 0
+    return { key: 'f:' + n.path, name: fileName, path: n.path, updated }
   })
-  const visible: typeof items = []
-  const hiddenSet = new Set<string>()
-  for (const it of items) {
-    if (it.type === 'dir') {
-      visible.push(it)
-      if (collapsed.value[it.path]) {
-        hiddenSet.add(it.path + '/')
-      }
-    } else {
-      let hide = false
-      for (const prefix of hiddenSet) {
-        if ((it.path + '/').startsWith(prefix)) { hide = true; break }
-      }
-      if (!hide) visible.push(it)
-    }
-  }
-  return visible
+  return items.sort((a, b) => {
+    if (sortMode.value === 'time_desc') return (b.updated || 0) - (a.updated || 0)
+    if (sortMode.value === 'time_asc') return (a.updated || 0) - (b.updated || 0)
+    if (sortMode.value === 'name_desc') return b.name.localeCompare(a.name)
+    return a.name.localeCompare(b.name)
+  })
 })
-function onTreeClick(n: { type: 'dir' | 'file'; path: string }) {
-  if (n.type === 'dir') {
-    collapsed.value[n.path] = !collapsed.value[n.path]
-  } else {
-    openFromList(n.path)
-  }
-}
+ 
 const originalContent = ref('')
 const dirty = computed(() => content.value !== originalContent.value)
 let saveTimer: any = null
@@ -218,7 +158,27 @@ const headings = computed(() => {
   return hs
 })
 const activeHeadingId = ref('')
-const showPreview = ref(true)
+const viewMode = ref<'both'|'editor'|'preview'>('both')
+const sidebarWidth = ref(280)
+let startX = 0
+let startW = 0
+function onResizerDown(e: MouseEvent) {
+  startX = e.clientX; startW = sidebarWidth.value
+  document.addEventListener('mousemove', onResizerMove)
+  document.addEventListener('mouseup', onResizerUp)
+  document.body.style.cursor = 'col-resize'
+  document.body.style.userSelect = 'none'
+}
+function onResizerMove(e: MouseEvent) {
+  const dx = e.clientX - startX
+  sidebarWidth.value = Math.max(200, Math.min(600, startW + dx))
+}
+function onResizerUp() {
+  document.removeEventListener('mousemove', onResizerMove)
+  document.removeEventListener('mouseup', onResizerUp)
+  document.body.style.cursor = ''
+  document.body.style.userSelect = ''
+}
 const charCount = computed(() => content.value.length)
 const wordCount = computed(() => content.value.trim().split(/\s+/).filter(Boolean).length)
 
@@ -245,6 +205,7 @@ function openFromList(p: string) {
   path.value = p
   openNote()
 }
+function setSort(m: 'time_desc'|'time_asc'|'name_desc'|'name_asc') { sortMode.value = m; showSort.value = false }
 
 function onEditorScroll(e: Event) {
   const ta = taRef.value, pv = pvRef.value
@@ -305,8 +266,18 @@ function onPreviewClick(e: MouseEvent) {
   e.preventDefault()
 }
 
+function cycleViewMode() {
+  if (viewMode.value === 'both') viewMode.value = 'preview'
+  else if (viewMode.value === 'preview') viewMode.value = 'editor'
+  else viewMode.value = 'both'
+}
+
 onMounted(async () => {
   await loadNotes()
+  try {
+    const s = await invoke<any>('get_settings')
+    if (s && s['notes_dir']) notesDir.value = s['notes_dir']
+  } catch {}
   const qp = route.query?.path as string | undefined
   if (qp) {
     path.value = qp
@@ -471,17 +442,26 @@ async function revealInFinder() {
 </script>
 
 <style scoped>
-.editor{display:flex;flex-direction:column;height:100%}
-.toolbar{display:flex;gap:8px;padding:8px;border-bottom:1px solid var(--panel-border);background:linear-gradient(90deg,rgba(92,225,230,.12),rgba(123,97,255,.1))}
-.content{display:grid;grid-template-columns:280px 1fr 1fr;height:100%}
-.sidebar{border-right:1px solid var(--panel-border);padding:8px;overflow:auto;background:var(--panel-bg)}
+.editor{display:grid;grid-template-rows:auto 1fr;height:100%}
+.editor-header{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;padding:8px;border-bottom:1px solid var(--panel-border);background:linear-gradient(90deg,rgba(92,225,230,.12),rgba(123,97,255,.1))}
+.editor-header{position:sticky;top:0;z-index:5}
+.header-left{position:relative}
+.header-left,.header-right{display:flex;gap:8px;align-items:center}
+.header-center{display:flex;gap:8px;align-items:center}
+.title-input{min-width:220px}
+.tags-input{min-width:180px}
+.path-input{min-width:220px}
+.content{display:grid;grid-template-columns:280px 1fr 1fr;height:100%;overflow:hidden;min-width:0}
+.sidebar{border-right:1px solid var(--panel-border);padding:8px;overflow-y:auto;overflow-x:hidden;background:var(--panel-bg)}
 .sidebar ul { list-style: none; padding: 0; margin: 0; }
-.sidebar li { cursor: pointer; padding: 6px 4px; border-radius: 4px; }
+.sidebar li { cursor: pointer; padding: 6px 4px; border-radius: 4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
 .sidebar li:hover{background:var(--btn-hover)}
 .sidebar li.h2 { padding-left: 8px; }
 .sidebar li.h3 { padding-left: 16px; }
 .sidebar li.h4 { padding-left: 24px; }
-.preview{padding:12px;border-left:1px solid var(--panel-border);overflow:auto;background:var(--panel-bg)}
+.sort-wrap{position:relative;display:inline-block}
+.sort-menu{position:absolute;top:36px;right:0;left:auto;display:flex;flex-direction:column;gap:6px;padding:8px;min-width:160px;z-index:10}
+.preview{padding:12px;border-left:1px solid var(--panel-border);overflow:auto;background:var(--panel-bg);height:100%;min-width:0}
 .hljs{background:#0e1220}
 .sidebar li.active { background: #e6f0ff; }
 .toolbar input{ }
@@ -490,5 +470,10 @@ async function revealInFinder() {
 .status { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-top: 1px solid #eee; color: #667085; font-size: 12px; }
 .status { border-top: 1px solid var(--panel-border); color: var(--text-muted) }
 .status .sep { color: var(--panel-border) }
-.editor-text{height:100%;resize:none;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas;line-height:1.6}
+.editor-text{height:100%;resize:none;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas;line-height:1.6;min-width:0}
+.editor-header .btn{position:relative}
+.editor-header .btn[data-tip]::after{content:attr(data-tip);position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);background:var(--panel-bg);border:1px solid var(--panel-border);color:var(--text-secondary);border-radius:6px;padding:4px 8px;white-space:nowrap;font-size:12px;opacity:0;pointer-events:none;transition:opacity .15s ease}
+.editor-header .btn:hover::after{opacity:1}
 </style>
+.resizer{width:6px;height:100%;cursor:col-resize;background:var(--panel-border)}
+.resizer:hover{background:var(--accent-end)}

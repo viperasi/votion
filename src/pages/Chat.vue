@@ -232,7 +232,7 @@ function insertSymbol(sym: string) {
 .dot { width: 8px; height: 8px; border-radius: 50%; background: #4f46e5; animation: pulse 1s infinite; }
 @keyframes pulse { 0% { opacity: .2 } 50% { opacity: 1 } 100% { opacity: .2 } }
 .tools { display: flex; gap: 8px; }
-.chat-container{display:grid;grid-template-columns:minmax(260px,28%) 1fr;grid-template-rows:1fr auto;width:100%;height:100%;flex:1;min-height:0}
+.chat-container{display:grid;grid-template-columns:minmax(260px,28%) 1fr;grid-template-rows:1fr auto;width:100%;height:100%;flex:1;min-height:0;min-width:0}
 .chat-container.full{grid-template-columns:1fr}
 .refs-panel{border-right:1px solid var(--panel-border);padding:12px;overflow:auto;background:var(--panel-bg)}
 .panel-header{font-weight:600;margin-bottom:8px;color:var(--text-secondary)}
@@ -242,8 +242,8 @@ function insertSymbol(sym: string) {
 .ref-meta{font-size:12px;color:var(--text-muted);margin-top:6px}
 .ref-path{color:var(--text-muted);margin-right:8px}
 .ref-preview{font-size:13px;color:var(--text-primary);margin-top:6px}
-.chat-main { display: grid; grid-template-rows: 1fr; min-height: 0 }
-.messages { overflow: auto; padding: 16px; }
+.chat-main { display: grid; grid-template-rows: 1fr; min-height: 0; min-width:0 }
+.messages { overflow: auto; padding: 16px; min-width:0 }
 .message { display: grid; grid-template-columns: 40px 1fr; gap: 10px; margin-bottom: 14px; align-items: flex-start; }
 .avatar { width: 32px; height: 32px; border-radius: 50%; background: #e3e7ff; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #333; box-shadow: 0 1px 2px rgba(0,0,0,.06); }
 .message.user .avatar { background: #ffd7d7; }
