@@ -8,6 +8,7 @@
 - Editor 编辑器：安全渲染（DOMPurify）、代码高亮（highlight.js）、内部链接跳转；顶部三段式胶囊工具栏、仅预览/仅编辑/双栏切换；侧栏文件列表可拖拽调宽
 - Settings 设置：OpenAI/Ollama 模型与嵌入配置、笔记目录选择（Tauri Dialog）、知识库参数；移除测试分组
 - 后端：SQLite 索引与 embeddings 表；事件广播自动刷新；向量优先检索，关键词回退
+- 该应用完全由 `trae SOLO Coder` 模式开发
 
 ## Install / 安装
 Prerequisites / 前置依赖：
@@ -58,4 +59,4 @@ npm run build
 欢迎 Issue 与 PR；建议在 `develop` 分支上提交改动。
 
 ## License / 许可
-MulanPSL-2.0
+MIT

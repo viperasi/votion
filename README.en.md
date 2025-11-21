@@ -1,36 +1,63 @@
-# votion
+# Votion
 
-#### Description
-notion的开源替代工具, 可私有化部署, 可发布博客等
+A cross-platform local knowledge and conversation assistant built with Tauri + Vue 3. It supports Markdown note editing/preview, vector search, and AI Q&A; runs locally and can be self-hosted.
 
-#### Software Architecture
-Software architecture description
+## Features
+- Left vertical toolbar, unified dark sci‑fi theme and custom scrollbar
+- Chat: streaming generation, model badge, thinking placeholder and spinner; capsule input with @/# shortcuts, Enter to send, Shift+Enter for newline
+- Editor: safe rendering (DOMPurify), code highlighting (highlight.js), internal link navigation; three‑section capsule toolbar; view modes (Preview‑only / Editor‑only / Both); resizable sidebar
+- Settings: OpenAI/Ollama provider configuration (chat + embeddings), system directory picker for notes; test section removed
+- Backend: SQLite index and embeddings table; index update event broadcast; vector‑first retrieval with keyword fallback
+- The entire application is developed using the `trae SOLO Coder` mode
 
-#### Installation
+## Install
+Prerequisites:
+- Node.js ≥ 16
+- Rust toolchain + Tauri environment (see https://tauri.app/)
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+Install dependencies:
+```
+npm install
+```
 
-#### Instructions
+## Development
+Web dev:
+```
+npm run dev
+```
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+Tauri app dev:
+```
+npm run tauri:dev
+```
 
-#### Contribution
+## Build
+Bundle frontend:
+```
+npm run build
+```
 
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+## Usage
+- Switch pages from the left toolbar: Chat / Editor / Settings
+- Chat: type your question and press Enter; collapsing “References” expands chat to full width; shows thinking state and streams the answer
+- Editor: header buttons show tooltips; file list supports sorting (time desc/asc, name desc/asc); toggle view modes; drag the splitter to resize the sidebar
+- Settings: pick the notes directory via system dialog; configure provider and models/embedding models
+- 
 
+## Configuration
+Set in Settings:
+- `provider`: `openai` or `ollama`
+- `openai_api_key`, `openai_base_url`, `openai_model`, `openai_embed_model`
+- `ollama_base_url`, `ollama_model`, `ollama_embed_model`
+- `notes_dir` (notes root), knowledge base parameters (chunk size/overlap, Top‑K, minimum similarity)
 
-#### Gitee Feature
+## Roadmap
+- More responsive refinements and quick actions
+- Reference cards with file‑type icons and similarity bars
+- More export and batch operations
 
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+## Contribute
+Issues and PRs are welcome; please base changes on the `develop` branch.
+
+## License
+MIT

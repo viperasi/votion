@@ -3,7 +3,7 @@ name = "votion"
 version = "0.0.1"
 description = "AI知识库驱动的本地笔记软件"
 authors = ["viperasi"]
-license = "MulanPSL-2.0"
+license = "MIT"
 edition = "2021"
 build = "build.rs"
 
