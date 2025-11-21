@@ -133,7 +133,11 @@ fn index_file_conn(db: &Arc<Mutex<Connection>>, path: PathBuf) -> Result<()> {
   )?;
   let note_id: i64 = conn.query_row("SELECT id FROM notes WHERE path=?1", params![path.to_string_lossy()], |r| r.get(0))?;
   conn.execute("DELETE FROM chunks WHERE note_id=?1", params![note_id])?;
-  for (i, ch) in chunk_markdown(&body).into_iter().enumerate() {
+  let s = read_settings(&conn);
+  let csize = s.get("chunk_size").and_then(|x| x.parse::<usize>().ok()).unwrap_or(0);
+  let coverlap = s.get("chunk_overlap").and_then(|x| x.parse::<usize>().ok()).unwrap_or(0);
+  let chunks = if csize > 0 { chunk_by_size(&body, csize, coverlap) } else { chunk_markdown(&body) };
+  for (i, ch) in chunks.into_iter().enumerate() {
     let chash = file_hash(&ch);
     conn.execute(
       "INSERT INTO chunks(note_id, seq, content, content_hash) VALUES (?1, ?2, ?3, ?4)",
@@ -229,6 +233,9 @@ fn index_note(state: tauri::State<'_, AppState>, path: String) -> Result<(), Str
 #[tauri::command]
 fn search_embeddings(state: tauri::State<'_, AppState>, query: String, top_k: Option<i64>) -> Result<serde_json::Value, String> {
   let conn = state.db.lock().unwrap();
+  let s = read_settings(&conn);
+  let conf_topk = s.get("search_top_k").and_then(|x| x.parse::<i64>().ok()).unwrap_or(5);
+  let min_sim = s.get("min_sim").and_then(|x| x.parse::<f32>().ok()).unwrap_or(0.0);
   let has_embeddings: i64 = conn.query_row("SELECT COUNT(1) FROM embeddings", [], |r| r.get(0)).unwrap_or(0);
   if has_embeddings > 0 {
     if let Some(qvec) = compute_embedding_blocking(&conn, &query).map_err(|e| e.to_string())? {
@@ -251,7 +258,7 @@ fn search_embeddings(state: tauri::State<'_, AppState>, query: String, top_k: Op
         }
       }
       scored.sort_by(|a, b| b.4.partial_cmp(&a.4).unwrap_or(std::cmp::Ordering::Equal));
-      let k = top_k.unwrap_or(5) as usize;
+      let k = top_k.unwrap_or(conf_topk) as usize;
       let items: Vec<serde_json::Value> = scored.into_iter().take(k).map(|(id, title, path, content, sim)| {
         serde_json::json!({"id": id, "title": title, "path": path, "content": content, "score": sim})
       }).collect();
@@ -274,7 +281,7 @@ fn search_embeddings(state: tauri::State<'_, AppState>, query: String, top_k: Op
     if score > 0 { scored.push((id, title, path, content, score)); }
   }
   scored.sort_by_key(|x| -x.4);
-  let k = top_k.unwrap_or(5) as usize;
+  let k = top_k.unwrap_or(conf_topk) as usize;
   let items: Vec<serde_json::Value> = scored.into_iter().take(k).map(|(id, title, path, content, sc)| {
     serde_json::json!({"id": id, "title": title, "path": path, "content": content, "score": sc as f32})
   }).collect();
@@ -405,7 +412,12 @@ fn start_generate_stream(state: tauri::State<'_, AppState>, app: tauri::AppHandl
       if !key.is_empty() && !model.is_empty() {
         let client = Client::new();
         let url = format!("{}/v1/chat/completions", base.trim_end_matches('/'));
-        let body = serde_json::json!({"model": model, "stream": true, "messages": [{"role":"system","content":"你是一个根据提供的参考内容进行回答的助理。"},{"role":"user","content": format!("请基于以下参考内容回答问题。\n\n问题:\n{}\n\n参考:\n{}", query, combined)}]});
+        let sys = s.get("system_prompt").cloned().unwrap_or_else(|| "你是一个根据提供的参考内容进行回答的助理。".to_string());
+        let user_tmpl = s.get("user_prompt_template").cloned().unwrap_or_else(|| "请基于以下参考内容回答问题。\n\n问题:\n{query}\n\n参考:\n{context}".to_string());
+        let prompt = user_tmpl.replace("{query}", &query).replace("{context}", &combined);
+        let temperature = s.get("temperature").and_then(|x| x.parse::<f32>().ok()).unwrap_or(0.7);
+        let mut body = serde_json::json!({"model": model, "stream": true, "messages": [{"role":"system","content": sys},{"role":"user","content": prompt}], "temperature": temperature});
+        if let Some(mt) = s.get("max_tokens").and_then(|x| x.parse::<i64>().ok()) { body["max_tokens"] = serde_json::json!(mt); }
         if let Ok(resp) = client.post(&url).header(AUTHORIZATION, format!("Bearer {}", key)).header(CONTENT_TYPE, "application/json").json(&body).send() {
           use std::io::BufRead;
           let mut reader = std::io::BufReader::new(resp);
@@ -433,7 +445,10 @@ fn start_generate_stream(state: tauri::State<'_, AppState>, app: tauri::AppHandl
       if !model.is_empty() {
         let client = Client::new();
         let url = format!("{}/api/generate", base.trim_end_matches('/'));
-        let body = serde_json::json!({"model": model, "prompt": format!("请基于以下参考内容回答问题。\n\n问题:\n{}\n\n参考:\n{}", query, combined), "stream": true});
+        let user_tmpl = s.get("user_prompt_template").cloned().unwrap_or_else(|| "请基于以下参考内容回答问题。\n\n问题:\n{query}\n\n参考:\n{context}".to_string());
+        let prompt = user_tmpl.replace("{query}", &query).replace("{context}", &combined);
+        let temperature = s.get("temperature").and_then(|x| x.parse::<f32>().ok()).unwrap_or(0.7);
+        let body = serde_json::json!({"model": model, "prompt": prompt, "stream": true, "options": {"temperature": temperature}});
         if let Ok(resp) = client.post(&url).header(CONTENT_TYPE, "application/json").json(&body).send() {
           use std::io::BufRead;
           let mut reader = std::io::BufReader::new(resp);
@@ -552,7 +567,9 @@ fn cosine_sim(a: &Vec<f32>, b: &Vec<f32>, an: f32) -> f32 {
 fn generate_with_provider(conn: &Connection, query: &str, context: &str) -> Result<Option<String>> {
   let s = read_settings(conn);
   let provider = s.get("provider").map(|x| x.to_string()).unwrap_or_default();
-  let prompt = format!("请基于以下参考内容回答问题。\n\n问题:\n{}\n\n参考:\n{}", query, context);
+  let sys = s.get("system_prompt").cloned().unwrap_or_else(|| "你是一个根据提供的参考内容进行回答的助理。".to_string());
+  let user_tmpl = s.get("user_prompt_template").cloned().unwrap_or_else(|| "请基于以下参考内容回答问题。\n\n问题:\n{query}\n\n参考:\n{context}".to_string());
+  let prompt = user_tmpl.replace("{query}", query).replace("{context}", context);
   if provider == "openai" {
     let key = s.get("openai_api_key").cloned().unwrap_or_default();
     let base = s.get("openai_base_url").cloned().unwrap_or_else(|| "https://api.openai.com".to_string());
@@ -560,13 +577,17 @@ fn generate_with_provider(conn: &Connection, query: &str, context: &str) -> Resu
     if key.is_empty() || model.is_empty() { return Ok(None); }
     let client = Client::new();
     let url = format!("{}/v1/chat/completions", base.trim_end_matches('/'));
-    let body = serde_json::json!({
+    let temperature = s.get("temperature").and_then(|x| x.parse::<f32>().ok()).unwrap_or(0.7);
+    let max_tokens = s.get("max_tokens").and_then(|x| x.parse::<i64>().ok());
+    let mut body = serde_json::json!({
       "model": model,
       "messages": [
-        {"role": "system", "content": "你是一个根据提供的参考内容进行回答的助理。"},
+        {"role": "system", "content": sys},
         {"role": "user", "content": prompt}
-      ]
+      ],
+      "temperature": temperature
     });
+    if let Some(mt) = max_tokens { body["max_tokens"] = serde_json::json!(mt); }
     let resp = client.post(&url).header(AUTHORIZATION, format!("Bearer {}", key)).header(CONTENT_TYPE, "application/json").json(&body).send()?;
     if !resp.status().is_success() { return Ok(None); }
     let v: serde_json::Value = resp.json()?;
@@ -578,7 +599,8 @@ fn generate_with_provider(conn: &Connection, query: &str, context: &str) -> Resu
     if model.is_empty() { return Ok(None); }
     let client = Client::new();
     let url = format!("{}/api/generate", base.trim_end_matches('/'));
-    let body = serde_json::json!({"model": model, "prompt": prompt, "stream": false});
+    let temperature = s.get("temperature").and_then(|x| x.parse::<f32>().ok()).unwrap_or(0.7);
+    let body = serde_json::json!({"model": model, "prompt": prompt, "stream": false, "options": {"temperature": temperature}});
     let resp = client.post(&url).header(CONTENT_TYPE, "application/json").json(&body).send()?;
     if !resp.status().is_success() { return Ok(None); }
     let v: serde_json::Value = resp.json()?;
@@ -587,4 +609,18 @@ fn generate_with_provider(conn: &Connection, query: &str, context: &str) -> Resu
   } else {
     Ok(None)
   }
+}
+fn chunk_by_size(content: &str, size: usize, overlap: usize) -> Vec<String> {
+  let mut out = Vec::new();
+  let mut i = 0;
+  let chars: Vec<char> = content.chars().collect();
+  let n = chars.len();
+  while i < n {
+    let end = usize::min(i + size, n);
+    let slice: String = chars[i..end].iter().collect();
+    out.push(slice);
+    if end == n { break; }
+    if overlap >= size { i = end; } else { i = end - overlap; }
+  }
+  out
 }
