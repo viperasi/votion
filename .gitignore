@@ -9,9 +9,10 @@
 .idea/**/shelf
 
 .idea/
-
+node_modules/
 # Generated files
 .idea/**/contentModel.xml
+src-tauri/target/
 
 # Sensitive or high-churn files
 .idea/**/dataSources/

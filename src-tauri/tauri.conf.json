@@ -1,0 +1,25 @@
+{
+  "package": {
+    "productName": "Votion",
+    "version": "0.1.0"
+  },
+  "build": {
+    "distDir": "../dist",
+    "devPath": "http://localhost:5173"
+  },
+  "tauri": {
+    "bundle": {
+      "active": false,
+      "targets": "all",
+      "identifier": "com.votion.app",
+      "icon": []
+    },
+    "windows": [
+      {
+        "title": "Votion",
+        "width": 1000,
+        "height": 700
+      }
+    ]
+  }
+}
