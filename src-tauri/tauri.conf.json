@@ -1,0 +1,50 @@
+{
+  "package": {
+    "productName": "Votion",
+    "version": "0.0.1"
+  },
+  "build": {
+    "distDir": "../dist",
+    "devPath": "http://localhost:5173"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": false,
+      "dialog": { "open": true, "save": true },
+      "shell": { "open": true },
+      "clipboard": { "writeText": true },
+      "window": {
+        "all": false,
+        "startDragging": true,
+        "close": true,
+        "maximize": true,
+        "unmaximize": true,
+        "minimize": true
+      }
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.xu81.votion",
+      "copyright": "© 2025 viperasi",
+      "shortDescription": "支持自动索引笔记的知识库笔记软件",
+      "longDescription": "Votion 是一个基于 Vue 3 和 Tauri 的知识库笔记软件，支持自动索引笔记，方便用户快速检索和管理笔记。",
+      "icon": [
+        "icons/icon.icns",
+        "icons/icon.ico",
+        "icons/icon.png"
+      ]
+    },
+    "windows": [
+      {
+        "title": "Votion",
+        "width": 1000,
+        "height": 700,
+        "decorations": false,
+        "transparent": true,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ]
+  }
+}
