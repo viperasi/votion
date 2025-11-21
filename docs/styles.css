@@ -1,0 +1,21 @@
+:root{--bg-start:#0b1020;--bg-end:#121a2f;--grid-stroke:#3b475e;--accent-start:#5ce1e6;--accent-end:#7b61ff;--text-primary:#ffffff;--text-secondary:#ffffff;--text-muted:#667085;--panel-bg:#141b30;--panel-border:#37425f;--card-bg:#0f1528;--card-border:#2c3650;--input-bg:#10162a;--input-border:#2c3650;--btn-bg:#0f1528;--btn-border:#2c3650;--btn-hover:#161f37}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg-start),var(--bg-end));color:var(--text-primary);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
+.grid-bg{position:relative}
+.grid-bg::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(to bottom,transparent,transparent 58px,var(--grid-stroke) 60px),repeating-linear-gradient(to right,transparent,transparent 58px,var(--grid-stroke) 60px);opacity:.12;pointer-events:none}
+.btn{background:var(--btn-bg);border:1px solid var(--btn-border);border-radius:8px;color:var(--text-secondary);padding:8px 12px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none}
+.btn:hover{background:var(--btn-hover)}
+.btn.btn-primary{background:linear-gradient(90deg,var(--accent-start),var(--accent-end));border-color:transparent;color:#fff}
+.panel{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:12px;padding:16px;margin:16px auto;max-width:960px}
+.panel-header{font-weight:600;color:var(--text-secondary);margin-bottom:8px;position:relative}
+.panel-header::after{content:"";position:absolute;left:0;bottom:-6px;width:64px;height:2px;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));border-radius:2px}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:10px;padding:12px}
+.hero{padding:48px 16px;text-align:center}
+.logo{width:80px;height:80px;border-radius:18px;display:block;margin:0 auto 12px}
+.subtitle{color:var(--text-secondary)}
+.actions{display:flex;gap:10px;justify-content:center;margin-top:12px}
+.features{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:10px}
+.shots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.shots img{width:100%;border-radius:10px;border:1px solid var(--card-border);background:var(--card-bg)}
+.code{white-space:pre-wrap}
+.content{padding-bottom:24px}
+.footer{text-align:center;color:var(--text-muted);padding:20px}
