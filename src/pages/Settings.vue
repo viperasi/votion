@@ -1,83 +1,147 @@
 <template>
-  <section>
+  <section class="settings grid-bg">
     <h2>设置</h2>
-    <div>
-      <label>笔记目录</label>
-      <input v-model="notesDir" />
-      <button @click="applyWatch">开始监听</button>
-      <button @click="pickDir">选择目录</button>
-      <button @click="reindex">重建索引</button>
+    <div class="panel">
+      <div class="panel-header">笔记目录</div>
+      <div class="inline">
+        <label>目录路径</label>
+        <input class="input" v-model="notesDir" />
+        <div class="actions">
+          <button class="btn" @click="applyWatch">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+            开始监听
+          </button>
+          <button class="btn" @click="pickDir">
+            <svg viewBox="0 0 24 24"><path d="M4 7h6l2 2h8v10H4z"/></svg>
+            选择目录
+          </button>
+          <button class="btn" @click="reindex">
+            <svg viewBox="0 0 24 24"><path d="M12 6a6 6 0 1 1-5.3 3H4l3-3 3 3H8.7A4 4 0 1 0 12 8"/></svg>
+            重建索引
+          </button>
+        </div>
+      </div>
     </div>
-    <div>
-      <h3>AI 配置</h3>
-      <label>提供者</label>
-      <select v-model="provider">
-        <option value="openai">OpenAI</option>
-        <option value="ollama">Ollama</option>
-      </select>
-      <div v-if="provider==='openai'">
+
+    <div class="panel">
+      <div class="panel-header">AI 配置</div>
+      <div class="inline">
+        <label>提供者</label>
+        <select class="input" v-model="provider">
+          <option value="openai">OpenAI</option>
+          <option value="ollama">Ollama</option>
+        </select>
+      </div>
+      <div v-if="provider==='openai'" class="inline">
         <label>OpenAI API Key</label>
-        <input v-model="openaiApiKey" type="password" />
+        <div class="input-with-btn">
+          <input class="input" v-model="openaiApiKey" :type="showOpenaiKey ? 'text' : 'password'" />
+          <button class="btn" @click="showOpenaiKey = !showOpenaiKey">
+            <svg viewBox="0 0 24 24"><path d="M12 5c5 0 9 7 9 7s-4 7-9 7-9-7-9-7 4-7 9-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
+            {{ showOpenaiKey ? '隐藏' : '显示' }}
+          </button>
+        </div>
         <label>OpenAI Base URL</label>
-        <input v-model="openaiBaseUrl" placeholder="可选，如 https://api.openai.com" />
+        <input class="input" v-model="openaiBaseUrl" placeholder="可选，如 https://api.openai.com" />
         <label>大模型</label>
-        <input v-model="openaiModel" placeholder="如 gpt-4o-mini" />
+        <input class="input" v-model="openaiModel" placeholder="如 gpt-4o-mini" />
         <label>嵌入模型</label>
-        <input v-model="openaiEmbedModel" placeholder="如 text-embedding-3-large" />
+        <input class="input" v-model="openaiEmbedModel" placeholder="如 text-embedding-3-large" />
       </div>
-      <div v-if="provider==='ollama'">
+      <div v-if="provider==='ollama'" class="inline">
         <label>Ollama Base URL</label>
-        <input v-model="ollamaBaseUrl" placeholder="如 http://localhost:11434" />
+        <input class="input" v-model="ollamaBaseUrl" placeholder="如 http://localhost:11434" />
         <label>大模型</label>
-        <input v-model="ollamaModel" placeholder="如 llama3.1:8b" />
+        <input class="input" v-model="ollamaModel" placeholder="如 llama3.1:8b" />
         <label>嵌入模型</label>
-        <input v-model="ollamaEmbedModel" placeholder="如 nomic-embed-text" />
+        <input class="input" v-model="ollamaEmbedModel" placeholder="如 nomic-embed-text" />
       </div>
-      <div>
+      <div class="inline">
         <label>温度</label>
-        <input v-model.number="temperature" type="number" step="0.1" min="0" max="2" />
+        <input class="input" v-model.number="temperature" type="number" step="0.1" min="0" max="2" />
         <label>最大Tokens</label>
-        <input v-model.number="maxTokens" type="number" min="1" />
-        <label>系统提示</label>
-        <textarea v-model="systemPrompt" placeholder="系统提示"></textarea>
+        <input class="input" v-model.number="maxTokens" type="number" min="1" />
       </div>
-      <button @click="saveAi">保存AI配置</button>
-      <div>
+      <div class="inline">
+        <label>系统提示</label>
+        <textarea class="input" v-model="systemPrompt" placeholder="系统提示"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" @click="saveAi">
+          <svg viewBox="0 0 24 24"><path d="M5 5h14v10H5zM9 19h6"/></svg>
+          保存AI配置
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">测试</div>
+      <div class="inline">
         <label>测试嵌入文本</label>
-        <input v-model="testText" placeholder="输入一句话" />
-        <button @click="doTestEmbed">测试嵌入</button>
+        <input class="input" v-model="testText" placeholder="输入一句话" />
+        <button class="btn" @click="doTestEmbed">
+          <svg viewBox="0 0 24 24"><path d="M12 3v7l6 3-6 3v5"/></svg>
+          测试嵌入
+        </button>
         <span v-if="embedDim!==null">维度: {{ embedDim }}</span>
       </div>
-      <div>
+      <div class="inline">
         <label>测试问答问题</label>
-        <input v-model="testQuestion" placeholder="输入问题" />
-        <button @click="doTestGenerate">测试问答</button>
-        <pre v-if="testAnswer">{{ testAnswer }}</pre>
+        <input class="input" v-model="testQuestion" placeholder="输入问题" />
+        <button class="btn" @click="doTestGenerate">
+          <svg viewBox="0 0 24 24"><path d="M5 12h10M9 8l4 4-4 4"/></svg>
+          测试问答
+        </button>
+      </div>
+      <pre v-if="testAnswer">{{ testAnswer }}</pre>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">知识库配置</div>
+      <div class="inline">
+        <label>分块大小</label>
+        <input class="input" v-model.number="chunkSize" type="number" min="1" />
+        <label>分块重叠</label>
+        <input class="input" v-model.number="chunkOverlap" type="number" min="0" />
+        <label>检索Top-K</label>
+        <input class="input" v-model.number="searchTopK" type="number" min="1" />
+        <label>最小相似度</label>
+        <input class="input" v-model.number="minSim" type="number" step="0.01" min="0" max="1" />
+      </div>
+      <div class="actions">
+        <button class="btn" @click="saveKb">
+          <svg viewBox="0 0 24 24"><path d="M6 6h12v12H6zM8 10h8M8 14h6"/></svg>
+          保存知识库配置
+        </button>
       </div>
     </div>
-    <div>
-      <h3>知识库配置</h3>
-      <label>分块大小</label>
-      <input v-model.number="chunkSize" type="number" min="1" />
-      <label>分块重叠</label>
-      <input v-model.number="chunkOverlap" type="number" min="0" />
-      <label>检索Top-K</label>
-      <input v-model.number="searchTopK" type="number" min="1" />
-      <label>最小相似度</label>
-      <input v-model.number="minSim" type="number" step="0.01" min="0" max="1" />
-      <button @click="saveKb">保存知识库配置</button>
+
+    <div class="panel">
+      <div class="panel-header">MCP 配置</div>
+      <div class="inline">
+        <label>端点列表（逗号分隔）</label>
+        <input class="input" v-model="mcpEndpoints" placeholder="如 http://localhost:4000,http://tools.local" />
+      </div>
+      <div class="actions">
+        <button class="btn" @click="saveMcp">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16v10H4zM6 9h12"/></svg>
+          保存MCP配置
+        </button>
+      </div>
     </div>
-    <div>
-      <h3>MCP 配置</h3>
-      <label>端点列表（逗号分隔）</label>
-      <input v-model="mcpEndpoints" placeholder="如 http://localhost:4000,http://tools.local" />
-      <button @click="saveMcp">保存MCP配置</button>
-    </div>
-    <div>
-      <h3>Prompt 配置</h3>
-      <label>用户提示模板</label>
-      <textarea v-model="userPromptTemplate" placeholder="模板中可包含 {query} 与 {context}"></textarea>
-      <button @click="savePrompt">保存Prompt配置</button>
+
+    <div class="panel">
+      <div class="panel-header">Prompt 配置</div>
+      <div class="inline">
+        <label>用户提示模板</label>
+        <textarea class="input" v-model="userPromptTemplate" placeholder="模板中可包含 {query} 与 {context}"></textarea>
+      </div>
+      <div class="actions">
+        <button class="btn" @click="savePrompt">
+          <svg viewBox="0 0 24 24"><path d="M5 5h14v14H5zM7 9h10M7 13h8"/></svg>
+          保存Prompt配置
+        </button>
+      </div>
     </div>
   </section>
 </template>
@@ -90,6 +154,7 @@ import { open } from '@tauri-apps/api/dialog'
 const notesDir = ref('')
 const provider = ref<'openai'|'ollama'>('openai')
 const openaiApiKey = ref('')
+const showOpenaiKey = ref(false)
 const openaiBaseUrl = ref('')
 const openaiModel = ref('')
 const openaiEmbedModel = ref('')
@@ -196,3 +261,13 @@ async function savePrompt() {
   await invoke('update_settings', { kv })
 }
 </script>
+<style scoped>
+.settings{padding:16px;color:var(--text-secondary)}
+h2{color:var(--text-secondary)}
+label{display:block;margin:6px 0;color:var(--text-muted)}
+.panel{padding:12px;margin-bottom:12px}
+.inline{display:grid;grid-template-columns:140px 1fr;gap:8px;align-items:center}
+.actions{display:flex;gap:8px;margin-top:8px}
+pre{background:var(--panel-bg);border:1px solid var(--panel-border);border-radius:8px;padding:10px;color:var(--text-primary)}
+.input-with-btn{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+</style>

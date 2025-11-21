@@ -1,30 +1,59 @@
 <template>
-  <section class="editor">
+  <section class="editor grid-bg">
     <div class="toolbar">
-      <input v-model="path" placeholder="文件路径" />
-      <button @click="openNote">打开</button>
-      <button @click="saveNote">保存</button>
-      <button @click="newNote">新建</button>
-      <button @click="deleteNote">删除</button>
-      <button @click="loadNotes">刷新列表</button>
-      <button @click="renameNote">重命名</button>
-      <button @click="openInOS">在系统中打开</button>
-      <button @click="duplicateNote">复制为...</button>
-      <input v-model="docTitle" placeholder="文档标题" />
-      <button @click="applyTitle">应用标题</button>
-      <button @click="copyHtml">复制HTML</button>
-      <input v-model="docTags" placeholder="文档标签（逗号分隔）" />
-      <button @click="applyTags">应用标签</button>
-      <button @click="revealInFinder">在Finder中显示</button>
-      <button @click="exportHtml">导出HTML</button>
+      <input class="input" v-model="path" placeholder="文件路径" />
+      <button class="btn" @click="openNote" title="打开">
+        <svg viewBox="0 0 24 24"><path d="M4 7h6l2 2h8v10H4z"/></svg>
+      </button>
+      <button class="btn" @click="saveNote" title="保存">
+        <svg viewBox="0 0 24 24"><path d="M5 5h14v10H5zM9 19h6"/></svg>
+      </button>
+      <button class="btn" @click="newNote" title="新建">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <button class="btn" @click="deleteNote" title="删除">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <button class="btn" @click="loadNotes" title="刷新列表">
+        <svg viewBox="0 0 24 24"><path d="M12 6a6 6 0 1 1-5.3 3H4l3-3 3 3H8.7A4 4 0 1 0 12 8"/></svg>
+      </button>
+      <button class="btn" @click="renameNote" title="重命名">
+        <svg viewBox="0 0 24 24"><path d="M5 19h14M7 5h10l-6 6-4-4"/></svg>
+      </button>
+      <button class="btn" @click="openInOS" title="在系统中打开">
+        <svg viewBox="0 0 24 24"><path d="M14 3h7v7M21 3l-9 9M5 5h6v6H5z"/></svg>
+      </button>
+      <button class="btn" @click="duplicateNote" title="复制为...">
+        <svg viewBox="0 0 24 24"><path d="M9 9h10v10H9zM5 5h10v2H7v10H5z"/></svg>
+      </button>
+      <input class="input" v-model="docTitle" placeholder="文档标题" />
+      <button class="btn" @click="applyTitle" title="应用标题">
+        <svg viewBox="0 0 24 24"><path d="M6 13l4 4 8-8"/></svg>
+      </button>
+      <button class="btn" @click="copyHtml" title="复制HTML">
+        <svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg>
+      </button>
+      <input class="input" v-model="docTags" placeholder="文档标签（逗号分隔）" />
+      <button class="btn" @click="applyTags" title="应用标签">
+        <svg viewBox="0 0 24 24"><path d="M6 7h12v4H6zM6 13h8v4H6z"/></svg>
+      </button>
+      <button class="btn" @click="revealInFinder" title="在Finder中显示">
+        <svg viewBox="0 0 24 24"><path d="M12 5c5 0 9 7 9 7s-4 7-9 7-9-7-9-7 4-7 9-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
+      </button>
+      <button class="btn" @click="exportHtml" title="导出HTML">
+        <svg viewBox="0 0 24 24"><path d="M6 6h12v12H6zM8 10h8M8 14h6"/></svg>
+      </button>
+      <button class="btn" @click="showPreview = !showPreview" :title="showPreview ? '隐藏预览' : '显示预览'">
+        <svg viewBox="0 0 24 24"><path d="M12 5c5 0 9 7 9 7s-4 7-9 7-9-7-9-7 4-7 9-7zm0 4a3 3 0 1 0 0 6 3 3 0 0 0 0-6"/></svg>
+      </button>
       <span class="dirty" v-if="dirty">未保存</span>
     </div>
-    <div class="content">
+    <div class="content" :style="{ gridTemplateColumns: showPreview ? '280px 1fr 1fr' : '280px 1fr' }">
       <aside class="sidebar">
-        <h3>笔记</h3>
-        <input v-model="noteFilter" placeholder="筛选标题或路径" />
-        <input v-model="tagFilter" placeholder="按标签筛选" />
-        <select v-model="sortMode">
+        <h3 class="panel-header">笔记</h3>
+        <input class="input" v-model="noteFilter" placeholder="筛选标题或路径" />
+        <input class="input" v-model="tagFilter" placeholder="按标签筛选" />
+        <select class="input" v-model="sortMode">
           <option value="path">按路径</option>
           <option value="updated">按更新时间</option>
         </select>
@@ -34,14 +63,19 @@
             <template v-else>{{ n.name }} <small v-if="n.tags">{{ n.tags }}</small></template>
           </li>
         </ul>
-        <h3>目录</h3>
-        <input v-model="findQuery" placeholder="查找当前文档" />
+        <h3 class="panel-header">目录</h3>
+        <input class="input" v-model="findQuery" placeholder="查找当前文档" />
         <ul>
           <li v-for="h in headings" :key="h.id" @click="scrollToHeading(h.id)" :class="['h' + h.level, h.id === activeHeadingId ? 'active' : '']">{{ h.text }}</li>
         </ul>
       </aside>
-      <textarea v-model="content" ref="taRef" @scroll="onEditorScroll" />
-      <div class="preview" v-html="safeHighlightedHtml" ref="pvRef" @scroll="onPreviewScroll" @click="onPreviewClick"></div>
+      <textarea class="input editor-text" v-model="content" ref="taRef" @scroll="onEditorScroll" />
+      <div v-if="showPreview" class="preview" v-html="safeHighlightedHtml" ref="pvRef" @scroll="onPreviewScroll" @click="onPreviewClick"></div>
+    </div>
+    <div class="status">
+      <span class="path">{{ path }}</span>
+      <span class="sep">·</span>
+      <span>字数 {{ charCount }} / 词数 {{ wordCount }}</span>
     </div>
   </section>
 </template>
@@ -184,6 +218,9 @@ const headings = computed(() => {
   return hs
 })
 const activeHeadingId = ref('')
+const showPreview = ref(true)
+const charCount = computed(() => content.value.length)
+const wordCount = computed(() => content.value.trim().split(/\s+/).filter(Boolean).length)
 
 async function openNote() {
   const r = await invoke<any>('get_note', { path: path.value })
@@ -434,18 +471,24 @@ async function revealInFinder() {
 </script>
 
 <style scoped>
-.editor { display: flex; flex-direction: column; height: 100%; }
-.toolbar { display: flex; gap: 8px; padding: 8px; border-bottom: 1px solid #eee; }
-.content { display: grid; grid-template-columns: 280px 1fr 1fr; height: 100%; }
-.sidebar { border-right: 1px solid #eee; padding: 8px; overflow: auto; }
+.editor{display:flex;flex-direction:column;height:100%}
+.toolbar{display:flex;gap:8px;padding:8px;border-bottom:1px solid var(--panel-border);background:linear-gradient(90deg,rgba(92,225,230,.12),rgba(123,97,255,.1))}
+.content{display:grid;grid-template-columns:280px 1fr 1fr;height:100%}
+.sidebar{border-right:1px solid var(--panel-border);padding:8px;overflow:auto;background:var(--panel-bg)}
 .sidebar ul { list-style: none; padding: 0; margin: 0; }
 .sidebar li { cursor: pointer; padding: 6px 4px; border-radius: 4px; }
-.sidebar li:hover { background: #f5f5f5; }
+.sidebar li:hover{background:var(--btn-hover)}
 .sidebar li.h2 { padding-left: 8px; }
 .sidebar li.h3 { padding-left: 16px; }
 .sidebar li.h4 { padding-left: 24px; }
-textarea { width: 100%; height: 100%; border: none; outline: none; padding: 8px; font-family: monospace; }
-.preview { padding: 12px; border-left: 1px solid #eee; overflow: auto; }
-.hljs { background: #f6f8fa; }
+.preview{padding:12px;border-left:1px solid var(--panel-border);overflow:auto;background:var(--panel-bg)}
+.hljs{background:#0e1220}
 .sidebar li.active { background: #e6f0ff; }
+.toolbar input{ }
+.dirty{color:var(--text-muted)}
+.path{color:var(--text-secondary)}
+.status { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-top: 1px solid #eee; color: #667085; font-size: 12px; }
+.status { border-top: 1px solid var(--panel-border); color: var(--text-muted) }
+.status .sep { color: var(--panel-border) }
+.editor-text{height:100%;resize:none;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas;line-height:1.6}
 </style>

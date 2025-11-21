@@ -1,14 +1,19 @@
 <template>
-  <div class="app">
-    <header class="header">
-      <h1>Votion</h1>
-      <nav>
-        <router-link to="/">首页</router-link>
-        <router-link to="/editor">编辑器</router-link>
-        <router-link to="/chat">问答</router-link>
-        <router-link to="/settings">设置</router-link>
+  <div class="app grid-bg">
+    <aside class="sidebar">
+      <div class="brand">Votion</div>
+      <nav class="side-nav">
+        <router-link to="/chat" class="side-link btn" title="问答">
+          <svg viewBox="0 0 24 24"><path d="M4 5h16v10H7l-3 4z"/></svg>
+        </router-link>
+        <router-link to="/editor" class="side-link btn" title="编辑器">
+          <svg viewBox="0 0 24 24"><path d="M7 5h10l-6 6-4-4M5 19h14"/></svg>
+        </router-link>
+        <router-link to="/settings" class="side-link btn" title="设置">
+          <svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0-6l2 3 3 1-1 3 1 3-3 1-2 3-2-3-3-1 1-3-1-3 3-1 2-3z"/></svg>
+        </router-link>
       </nav>
-    </header>
+    </aside>
     <main class="main">
       <router-view />
     </main>
@@ -16,8 +21,11 @@
 </template>
 
 <style scoped>
-.app { display: flex; flex-direction: column; height: 100vh; }
-.header { display: flex; align-items: center; gap: 16px; padding: 12px; border-bottom: 1px solid #eee; }
-.header a { margin-right: 8px; }
-.main { flex: 1; overflow: auto; }
+.app{display:grid;grid-template-columns:64px 1fr;height:100vh}
+.sidebar{display:flex;flex-direction:column;align-items:center;gap:12px;padding:12px;border-right:1px solid var(--panel-border);background:var(--panel-bg)}
+.brand{font-weight:700;color:var(--text-secondary)}
+.side-nav{display:flex;flex-direction:column;gap:10px}
+.side-link{display:flex;align-items:center;justify-content:center}
+.side-link.router-link-active{transform:translateY(-1px);box-shadow:0 6px 16px rgba(123,97,255,.25);background:var(--btn-hover)}
+.main{overflow:auto}
 </style>
