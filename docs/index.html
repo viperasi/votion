@@ -14,70 +14,71 @@
         <span>Votion</span>
       </div>
       <div class="nav-actions">
-        <a class="btn" href="../README.en.md" target="_blank" rel="noopener">Docs</a>
-        <a class="btn" href="https://github.com/viperasi/votion" target="_blank" rel="noopener">GitHub</a>
-        <a class="btn btn-primary" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">Download</a>
+        <a class="btn" id="t-docs" href="../README.en.md" target="_blank" rel="noopener">Docs</a>
+        <a class="btn" id="t-github" href="https://github.com/viperasi/votion" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-primary" id="t-download" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">Download</a>
+        <button class="btn lang" id="langToggle">中文</button>
       </div>
     </header>
     <section class="hero">
       <img src="./votion.svg" class="logo" alt="Votion" />
       <h1>Votion</h1>
-      <p class="subtitle">A cross‑platform local knowledge & conversation assistant built with Tauri + Vue 3</p>
+      <p class="subtitle" id="t-subtitle">A cross‑platform local knowledge & conversation assistant built with Tauri + Vue 3</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/viperasi/votion" target="_blank" rel="noopener">Star on GitHub</a>
-        <a class="btn" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">Get Releases</a>
+        <a class="btn btn-primary" id="t-hero-star" href="https://github.com/viperasi/votion" target="_blank" rel="noopener">Star on GitHub</a>
+        <a class="btn" id="t-hero-releases" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">Get Releases</a>
       </div>
     </section>
     <main class="content container">
       <section class="panel">
-        <div class="panel-header">Features</div>
+        <div class="panel-header" id="t-feats">Features</div>
         <ul class="features">
           <li class="card">
             <div class="feat">
               <svg viewBox="0 0 24 24"><path d="M4 5h16v10H7l-3 4z"/></svg>
-              <div>Capsule chat input with streaming answers and model badge</div>
+              <div id="t-feat1">Capsule chat input with streaming answers and model badge</div>
             </div>
           </li>
           <li class="card">
             <div class="feat">
               <svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg>
-              <div>Safe Markdown preview and code highlighting</div>
+              <div id="t-feat2">Safe Markdown preview and code highlighting</div>
             </div>
           </li>
           <li class="card">
             <div class="feat">
               <svg viewBox="0 0 24 24"><path d="M6 7h12M6 12h8M6 17h4"/></svg>
-              <div>Resizable notes sidebar and view modes (Preview / Editor / Both)</div>
+              <div id="t-feat3">Resizable notes sidebar and view modes (Preview / Editor / Both)</div>
             </div>
           </li>
           <li class="card">
             <div class="feat">
               <svg viewBox="0 0 24 24"><path d="M12 6a6 6 0 1 1-5.3 3H4l3-3 3 3"/></svg>
-              <div>Vector search with keyword fallback</div>
+              <div id="t-feat4">Vector search with keyword fallback</div>
             </div>
           </li>
         </ul>
       </section>
       <section class="panel">
-        <div class="panel-header">Screenshots</div>
+        <div class="panel-header" id="t-shots">Screenshots</div>
         <div class="shots">
           <img src="./chat.png" alt="Chat" />
           <img src="./setting.png" alt="Settings" />
         </div>
       </section>
       <section class="panel">
-        <div class="panel-header">Install</div>
+        <div class="panel-header" id="t-install">Install</div>
         <pre class="card code">npm install
 npm run dev</pre>
       </section>
       <section class="panel">
-        <div class="panel-header">Downloads</div>
+        <div class="panel-header" id="t-dl">Downloads</div>
         <div class="badges">
-          <a class="btn" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">
+          <a class="btn" id="t-dl-macos" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24"><path d="M12 3v14M5 10l7 7 7-7"/></svg>
             macOS (DMG)
           </a>
-          <a class="btn" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">
+          <a class="btn" id="t-dl-win" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
             Windows (Zip)
           </a>
@@ -85,5 +86,40 @@ npm run dev</pre>
       </section>
     </main>
     <footer class="footer">MIT © 2025</footer>
+    <script>
+      const en = {
+        docs: 'Docs', github: 'GitHub', download: 'Download', subtitle: 'A cross‑platform local knowledge & conversation assistant built with Tauri + Vue 3', heroStar: 'Star on GitHub', heroReleases: 'Get Releases', feats: 'Features', feat1: 'Capsule chat input with streaming answers and model badge', feat2: 'Safe Markdown preview and code highlighting', feat3: 'Resizable notes sidebar and view modes (Preview / Editor / Both)', feat4: 'Vector search with keyword fallback', shots: 'Screenshots', install: 'Install', dl: 'Downloads', dlMac: 'macOS (DMG)', dlWin: 'Windows (Zip)'
+      }
+      const zh = {
+        docs: '文档', github: 'GitHub', download: '下载', subtitle: '跨平台本地知识与对话助手，基于 Tauri + Vue 3', heroStar: 'GitHub 加星', heroReleases: '获取发布', feats: '特性', feat1: '胶囊输入与流式回答，显示当前模型', feat2: '安全的 Markdown 预览与代码高亮', feat3: '笔记侧栏可拖拽，支持仅预览/仅编辑/双栏', feat4: '向量检索，关键词回退', shots: '截图', install: '安装', dl: '下载', dlMac: 'macOS (DMG)', dlWin: 'Windows (Zip)'
+      }
+      function applyLang(l){
+        const t = l==='zh'?zh:en
+        document.getElementById('t-docs').textContent = t.docs
+        document.getElementById('t-github').textContent = t.github
+        document.getElementById('t-download').textContent = t.download
+        document.getElementById('t-subtitle').textContent = t.subtitle
+        document.getElementById('t-hero-star').textContent = t.heroStar
+        document.getElementById('t-hero-releases').textContent = t.heroReleases
+        document.getElementById('t-feats').textContent = t.feats
+        document.getElementById('t-feat1').textContent = t.feat1
+        document.getElementById('t-feat2').textContent = t.feat2
+        document.getElementById('t-feat3').textContent = t.feat3
+        document.getElementById('t-feat4').textContent = t.feat4
+        document.getElementById('t-shots').textContent = t.shots
+        document.getElementById('t-install').textContent = t.install
+        document.getElementById('t-dl').textContent = t.dl
+        document.getElementById('t-dl-macos').lastChild.textContent = ' '+t.dlMac
+        document.getElementById('t-dl-win').lastChild.textContent = ' '+t.dlWin
+        document.getElementById('langToggle').textContent = l==='zh'?'EN':'中文'
+      }
+      const initLang = localStorage.getItem('lang') || (navigator.language||'en').startsWith('zh')?'zh':'en'
+      applyLang(initLang)
+      document.getElementById('langToggle').addEventListener('click',()=>{
+        const next = document.getElementById('langToggle').textContent==='中文'?'zh':'en'
+        localStorage.setItem('lang', next)
+        applyLang(next)
+      })
+    </script>
   </body>
   </html>
