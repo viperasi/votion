@@ -96,6 +96,7 @@ npm run dev</pre>
       function applyLang(l){
         const t = l==='zh'?zh:en
         document.getElementById('t-docs').textContent = t.docs
+        document.getElementById('t-docs').setAttribute('href', l==='zh' ? '../README.md' : '../README.en.md')
         document.getElementById('t-github').textContent = t.github
         document.getElementById('t-download').textContent = t.download
         document.getElementById('t-subtitle').textContent = t.subtitle
@@ -113,12 +114,16 @@ npm run dev</pre>
         document.getElementById('t-dl-win').lastChild.textContent = ' '+t.dlWin
         document.getElementById('langToggle').textContent = l==='zh'?'EN':'中文'
       }
-      const initLang = localStorage.getItem('lang') || (navigator.language||'en').startsWith('zh')?'zh':'en'
+      const saved = localStorage.getItem('lang')
+      const initLang = saved ? saved : ((navigator.language||'en').startsWith('zh') ? 'zh' : 'en')
       applyLang(initLang)
+      document.documentElement.setAttribute('data-lang', initLang)
       document.getElementById('langToggle').addEventListener('click',()=>{
-        const next = document.getElementById('langToggle').textContent==='中文'?'zh':'en'
+        const curr = document.documentElement.getAttribute('data-lang') || 'en'
+        const next = curr==='zh' ? 'en' : 'zh'
         localStorage.setItem('lang', next)
         applyLang(next)
+        document.documentElement.setAttribute('data-lang', next)
       })
     </script>
   </body>
