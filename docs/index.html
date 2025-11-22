@@ -8,36 +8,80 @@
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <header class="hero">
+    <header class="nav">
+      <div class="brand">
+        <img src="./votion.svg" class="brand-icon" alt="Votion" />
+        <span>Votion</span>
+      </div>
+      <div class="nav-actions">
+        <a class="btn" href="../README.en.md" target="_blank" rel="noopener">Docs</a>
+        <a class="btn" href="https://github.com/viperasi/votion" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-primary" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">Download</a>
+      </div>
+    </header>
+    <section class="hero">
       <img src="./votion.svg" class="logo" alt="Votion" />
       <h1>Votion</h1>
       <p class="subtitle">A cross‑platform local knowledge & conversation assistant built with Tauri + Vue 3</p>
       <div class="actions">
-        <a class="btn btn-primary" href="https://github.com/viperasi/votion" target="_blank" rel="noopener">GitHub</a>
-        <a class="btn" href="../README.en.md" target="_blank" rel="noopener">Docs</a>
+        <a class="btn btn-primary" href="https://github.com/viperasi/votion" target="_blank" rel="noopener">Star on GitHub</a>
+        <a class="btn" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">Get Releases</a>
       </div>
-    </header>
-    <main class="content">
+    </section>
+    <main class="content container">
       <section class="panel">
         <div class="panel-header">Features</div>
         <ul class="features">
-          <li class="card">Capsule chat input with streaming answers and model badge</li>
-          <li class="card">Safe Markdown preview and code highlighting</li>
-          <li class="card">Resizable notes sidebar and view modes (Preview / Editor / Both)</li>
-          <li class="card">Vector search with keyword fallback</li>
+          <li class="card">
+            <div class="feat">
+              <svg viewBox="0 0 24 24"><path d="M4 5h16v10H7l-3 4z"/></svg>
+              <div>Capsule chat input with streaming answers and model badge</div>
+            </div>
+          </li>
+          <li class="card">
+            <div class="feat">
+              <svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6M16 6l4 6-4 6"/></svg>
+              <div>Safe Markdown preview and code highlighting</div>
+            </div>
+          </li>
+          <li class="card">
+            <div class="feat">
+              <svg viewBox="0 0 24 24"><path d="M6 7h12M6 12h8M6 17h4"/></svg>
+              <div>Resizable notes sidebar and view modes (Preview / Editor / Both)</div>
+            </div>
+          </li>
+          <li class="card">
+            <div class="feat">
+              <svg viewBox="0 0 24 24"><path d="M12 6a6 6 0 1 1-5.3 3H4l3-3 3 3"/></svg>
+              <div>Vector search with keyword fallback</div>
+            </div>
+          </li>
         </ul>
       </section>
       <section class="panel">
         <div class="panel-header">Screenshots</div>
         <div class="shots">
           <img src="./chat.png" alt="Chat" />
-          <img src="./setting.png" alt="Setting" />
+          <img src="./setting.png" alt="Settings" />
         </div>
       </section>
       <section class="panel">
         <div class="panel-header">Install</div>
         <pre class="card code">npm install
 npm run dev</pre>
+      </section>
+      <section class="panel">
+        <div class="panel-header">Downloads</div>
+        <div class="badges">
+          <a class="btn" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 3v14M5 10l7 7 7-7"/></svg>
+            macOS (DMG)
+          </a>
+          <a class="btn" href="https://github.com/viperasi/votion/releases" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+            Windows (Zip)
+          </a>
+        </div>
       </section>
     </main>
     <footer class="footer">MIT © 2025</footer>
